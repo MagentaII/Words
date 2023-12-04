@@ -228,41 +228,40 @@ public class WordsFragment extends Fragment {
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.item_clear:
-                AlertDialog.Builder builder = new AlertDialog.Builder(requireActivity());
-                builder.setTitle("清空資料");
-                builder.setPositiveButton("確定", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        wordViewModel.deleteWords();
-                    }
-                });
-                builder.setNegativeButton("取消", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
+        int itemId = item.getItemId();
 
-                    }
-                });
-                builder.create();
-                builder.show();
-                break;
-            case R.id.item_view_type:
-                SharedPreferences shp = requireActivity().getSharedPreferences(VIEW_TYPE_SHP, Context.MODE_PRIVATE);
-                boolean viewType = shp.getBoolean(IS_USING_CARD_VIEW, false);
-                SharedPreferences.Editor editor = shp.edit();
-                if (viewType) {
-                    recyclerView.setAdapter(myAdapter1);
-                    recyclerView.addItemDecoration(dividerItemDecoration);
-                    editor.putBoolean(IS_USING_CARD_VIEW, false);
-                } else {
-                    recyclerView.setAdapter(myAdapter2);
-                    recyclerView.removeItemDecoration(dividerItemDecoration);
-                    editor.putBoolean(IS_USING_CARD_VIEW, true);
+        if (itemId == R.id.item_clear) {
+            AlertDialog.Builder builder = new AlertDialog.Builder(requireActivity());
+            builder.setTitle("清空資料");
+            builder.setPositiveButton("確定", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    wordViewModel.deleteAllWords();
                 }
-                editor.apply();
-
+            });
+            builder.setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    // 取消操作
+                }
+            });
+            builder.create().show();
+        } else if (itemId == R.id.item_view_type) {
+            SharedPreferences shp = requireActivity().getSharedPreferences(VIEW_TYPE_SHP, Context.MODE_PRIVATE);
+            boolean viewType = shp.getBoolean(IS_USING_CARD_VIEW, false);
+            SharedPreferences.Editor editor = shp.edit();
+            if (viewType) {
+                recyclerView.setAdapter(myAdapter1);
+                recyclerView.addItemDecoration(dividerItemDecoration);
+                editor.putBoolean(IS_USING_CARD_VIEW, false);
+            } else {
+                recyclerView.setAdapter(myAdapter2);
+                recyclerView.removeItemDecoration(dividerItemDecoration);
+                editor.putBoolean(IS_USING_CARD_VIEW, true);
+            }
+            editor.apply();
         }
+
         return super.onOptionsItemSelected(item);
     }
 }
